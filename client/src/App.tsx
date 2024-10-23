@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./App.css";
 import { useGenerateData } from "./services/useGenerateData";
 
 const defaultNumberOfRows = 10;
@@ -7,6 +6,9 @@ const defaultNumberOfRows = 10;
 export default function App() {
   const [totalRows, setTotalRows] = useState(defaultNumberOfRows);
   const handleGenerateData = useGenerateData();
+  const handlePreviewData = () => {
+    console.log("todo");
+  };
 
   return (
     <>
@@ -17,14 +19,15 @@ export default function App() {
         max={100}
         value={totalRows}
       />
+      <button onClick={() => handlePreviewData()}>Preview Data</button>
       <button
         onClick={() =>
           handleGenerateData({
             totalRows,
             fields: [
               { name: "name", fieldType: "firstName" },
-              { name: "name", fieldType: 'fullName' },
-              { name: "name", fieldType: 'lastName' },
+              { name: "name", fieldType: "fullName" },
+              { name: "name", fieldType: "lastName" },
             ],
           })
         }

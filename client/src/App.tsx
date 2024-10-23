@@ -1,25 +1,36 @@
 import { useState } from "react";
 import "./App.css";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useGenerateData } from "./services/useGenerateData";
 
-function App() {
-  const [count, setCount] = useState(0);
+const defaultNumberOfRows = 10;
 
-  const a = useSuspenseQuery({
-    queryKey: ["a"],
-    queryFn: () => fetch("/api").then((r) => r.json()),
-  });
-  console.log(a.data);
-  
-
+export default function App() {
+  const [totalRows, setTotalRows] = useState(defaultNumberOfRows);
+  const handleGenerateData = useGenerateData();
 
   return (
     <>
-      <button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
+      <input
+        onChange={(e) => setTotalRows(Number(e.target.value))}
+        type="number"
+        min={1}
+        max={100}
+        value={totalRows}
+      />
+      <button
+        onClick={() =>
+          handleGenerateData({
+            totalRows,
+            fields: [
+              { name: "name", fieldType: "firstName" },
+              { name: "name", fieldType: 'fullName' },
+              { name: "name", fieldType: 'lastName' },
+            ],
+          })
+        }
+      >
+        Generate Data
       </button>
     </>
   );
 }
-
-export default App;

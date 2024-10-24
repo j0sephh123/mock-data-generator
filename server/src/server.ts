@@ -5,6 +5,12 @@ import { endpoints, generateDataReqSchema } from "shared";
 
 const app = new Hono();
 
+const mapFieldToFaker = {
+  fullName: faker.person.fullName,
+  firstName: faker.person.firstName,
+  lastName: faker.person.lastName,
+} as const;
+
 app.post(endpoints.generateData, async (c) => {
   try {
     const data = await c.req.json();
@@ -14,9 +20,16 @@ app.post(endpoints.generateData, async (c) => {
       return c.json({ error: parsedData.error.errors }, 400);
     }
 
-    const { totalRows } = parsedData.data;
-    const generatedData = Array.from({ length: totalRows }, () => {
-      return faker.person.fullName();
+    const { totalRows, fields } = parsedData.data;
+
+    const generatedData: any[] = [];
+
+    fields.map((field) => {
+      const fakerFunction = mapFieldToFaker[field.fieldType];
+
+      generatedData.push(
+        Array.from({ length: totalRows }, () => fakerFunction())
+      );
     });
 
     return c.json({ generatedData });

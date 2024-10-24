@@ -10,8 +10,7 @@ type Response = string;
 export const useGenerateData = () => {
   const { mutateAsync } = useMutation<Response, DefaultError, Variables>({
     mutationFn: (body) => fetchApi.post(endpoints.generateData, body),
-    onSuccess: (response) => {
-      console.log(response);
+    onSuccess: () => {
     },
     onError(error) {
       console.error(error, "Error generating data!");

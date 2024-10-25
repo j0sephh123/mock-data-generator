@@ -1,20 +1,18 @@
 import { useCallback, useState } from "react";
-import FieldRow from "./components/FieldRow/FieldRow";
-import { AppShell, Button } from "@mantine/core";
-import { Plus } from "lucide-react";
+import { Button, Tooltip } from "@mantine/core";
 import generateId from "./utils/generateId";
 import generateData from "./utils/generateData";
 import DisplayData from "./components/DisplayData/DisplayData";
 import TotalRowsInput from "./components/TotalRowsInput";
+import { ConditionalWrapper } from "./components/ConditionalWrapper";
+import TheLayout from "./components/TheLayout";
+import FieldsPicker from "./components/FieldsPicker/FieldsPicker";
 
 const defaultNumberOfRows = 10;
-
-const MAX_FIELDS = 10;
 
 export default function App() {
   const [code, setCode] = useState<string | null>(null);
   const [totalRows, setTotalRows] = useState(defaultNumberOfRows);
-
   const [renderedFields, setRenderedFields] = useState<
     {
       id: string;
@@ -65,50 +63,43 @@ export default function App() {
     });
   };
 
+  const isDisabled = renderedFields.length < 1;
+
   return (
-    <>
-      <AppShell header={{ height: 60 }} padding="md">
-        <AppShell.Header>
-          <div>Logo</div>
-        </AppShell.Header>
-        <AppShell.Main>
-          {renderedFields.map(({ fieldType, id, name }) => (
-            <FieldRow
-              name={name}
-              type={fieldType}
-              key={id}
-              id={id}
-              onRemove={(id) => {
-                setRenderedFields((fields) =>
-                  fields.filter((field) => field.id !== id)
-                );
-              }}
-            />
-          ))}
-          {renderedFields.length < MAX_FIELDS && (
-            <Button
-              onClick={handleAddField}
-              color="gray"
-              leftSection={<Plus />}
-            >
-              Add Another Field
-            </Button>
+    <TheLayout
+      footerSlot={
+        <ConditionalWrapper
+          condition={isDisabled}
+          wrapper={(children) => (
+            <Tooltip label="Need to have at least 1 field to generate">
+              {children}
+            </Tooltip>
           )}
-          <TotalRowsInput totalRows={totalRows} setTotalRows={setTotalRows} />
-          <DisplayData
-            code={code}
-            setCode={setCode}
-            totalRows={totalRows}
-            setTotalRows={setTotalRows}
-            handlePreviewData={handlePreviewData}
-          />
-        </AppShell.Main>
-        <AppShell.Footer p="md">
-          <Button color="violet" onClick={() => handlePreviewData()}>
+        >
+          <Button
+            disabled={isDisabled}
+            color="violet"
+            onClick={() => handlePreviewData()}
+          >
             Generate
           </Button>
-        </AppShell.Footer>
-      </AppShell>
-    </>
+        </ConditionalWrapper>
+      }
+      headerSlot={<div>Logo</div>}
+    >
+      <FieldsPicker
+        renderedFields={renderedFields}
+        setRenderedFields={setRenderedFields}
+        handleAddField={handleAddField}
+      />
+      <TotalRowsInput totalRows={totalRows} setTotalRows={setTotalRows} />
+      <DisplayData
+        code={code}
+        setCode={setCode}
+        totalRows={totalRows}
+        setTotalRows={setTotalRows}
+        handlePreviewData={handlePreviewData}
+      />
+    </TheLayout>
   );
 }

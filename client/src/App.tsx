@@ -1,19 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useState } from "react";
-import { useGenerateData } from "./services/useGenerateData";
 import JsonDownloadButton from "./components/JsonDownloadButton";
 import Select from "./components/Select/Select";
 import FieldRow from "./components/FieldRow/FieldRow";
-import { Button } from "@mantine/core";
+import { Button, Modal, Text } from "@mantine/core";
 import { Plus } from "lucide-react";
 import generateId from "./utils/generateId";
+import { CodeHighlight } from "@mantine/code-highlight";
+import { generateDataReqSchema } from "shared";
+import { z } from "zod";
+import { faker } from "@faker-js/faker";
 
 const defaultNumberOfRows = 10;
 
 const MAX_FIELDS = 10;
 
+const mapFieldToFaker = {
+  fullName: faker.person.fullName,
+  firstName: faker.person.firstName,
+  lastName: faker.person.lastName,
+} as const;
+
 export default function App() {
+  const [code, setCode] = useState<string | null>(null);
   const [totalRows, setTotalRows] = useState(defaultNumberOfRows);
-  const handleGenerateData = useGenerateData();
+  const handleGenerateData = async (
+    params: z.infer<typeof generateDataReqSchema>
+  ) => {
+    return new Promise((resolve) => {
+      const { totalRows, fields } = params;
+
+      const generatedData: any[] = [];
+
+      fields.map((field) => {
+        const fakerFunction = mapFieldToFaker[field.fieldType];
+
+        generatedData.push(
+          Array.from({ length: totalRows }, () => fakerFunction())
+        );
+      });
+
+      resolve({ generatedData });
+    });
+  };
 
   const [renderedFields, setRenderedFields] = useState<
     {
@@ -57,7 +86,12 @@ export default function App() {
   }, [renderedFields]);
 
   const handlePreviewData = () => {
-    console.log("handlePreviewData");
+    handleGenerateData({
+      totalRows,
+      fields: renderedFields,
+    }).then((data) => {
+      setCode(JSON.stringify(data, null, 2));
+    });
   };
 
   return (
@@ -78,11 +112,7 @@ export default function App() {
           />
         ))}
         {renderedFields.length < MAX_FIELDS && (
-          <Button
-            onClick={handleAddField}
-            color="gray"
-            leftSection={<Plus />}
-          >
+          <Button onClick={handleAddField} color="gray" leftSection={<Plus />}>
             ADD ANOTHER FIELD
           </Button>
         )}
@@ -99,7 +129,7 @@ export default function App() {
       </div>
       <div>
         <button onClick={() => handlePreviewData()}>Preview Data</button>
-        <button
+        {/* <button
           onClick={() =>
             handleGenerateData({
               totalRows,
@@ -110,7 +140,7 @@ export default function App() {
           }
         >
           Generate Data
-        </button>
+        </button> */}
         <div
           style={{
             display: "flex",
@@ -118,6 +148,20 @@ export default function App() {
         ></div>
         <Select />
         <JsonDownloadButton data={{ a: 5 }} />
+        <Modal
+          title="Preview"
+          size="xl"
+          opened={!!code}
+          onClose={() => setCode(null)}
+        >
+          <CodeHighlight
+            code={code ?? ""}
+            language="json"
+            copyLabel="Copy"
+            copiedLabel="Copied!"
+          />
+          <Text pt="md">Showing first 100 rows</Text>
+        </Modal>
       </div>
     </>
   );

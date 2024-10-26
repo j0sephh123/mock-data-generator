@@ -7,6 +7,8 @@ import TotalRowsInput from "./components/TotalRowsInput";
 import { ConditionalWrapper } from "./components/ConditionalWrapper";
 import TheLayout from "./components/TheLayout";
 import FieldsPicker from "./components/FieldsPicker/FieldsPicker";
+import SortableList from "./components/SortableList";
+import Counter from "./store/example-components";
 
 const defaultNumberOfRows = 10;
 
@@ -87,6 +89,8 @@ export default function App() {
       }
       headerSlot={<div>Logo</div>}
     >
+      <Counter />
+      <SortableList />
       <FieldsPicker
         renderedFields={renderedFields}
         setRenderedFields={setRenderedFields}

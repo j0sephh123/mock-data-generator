@@ -16,6 +16,9 @@ export default async function generateData(
     const { totalRows, fields } = params;
     const generatedData: any[] = [];
 
+    console.log(fields);
+    
+
     for (let i = 0; i < totalRows; i++) {
       const data = fields.reduce<Record<string, string>>(
         (acc, { fieldType, name }) => {

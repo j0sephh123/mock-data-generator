@@ -6,19 +6,19 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/code-highlight/styles.css";
-import { DragDropContext } from "@hello-pangea/dnd";
+import DndProvider from "./providers/DndProvider.tsx";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <DragDropContext onDragEnd={() => undefined}>
+    <DndProvider>
       <QueryClientProvider client={queryClient}>
         <MantineProvider defaultColorScheme="dark">
           <App />
         </MantineProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </DragDropContext>
+    </DndProvider>
   </StrictMode>
 );

@@ -34,6 +34,9 @@ const changeFieldType = (id: FieldRowI["id"], newValue: FieldTypeI) => {
 const setCode = (code: FieldsProxy["code"]) => {
   fieldsProxy.code = code;
 };
+const setTotalRows = (totalRows: FieldsProxy["totalRows"]) => {
+  fieldsProxy.totalRows = totalRows;
+};
 
 const handleDrag = (destinationIndex: number, sourceIndex: number) => {
   const newItems = Array.from(fieldsProxy.fields);
@@ -50,4 +53,5 @@ export const fieldsActions = {
   changeFieldType,
   setCode,
   handleDrag,
+  setTotalRows,
 } as const;

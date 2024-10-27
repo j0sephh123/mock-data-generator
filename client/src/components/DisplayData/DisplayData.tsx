@@ -1,27 +1,21 @@
 import { CodeHighlight } from "@mantine/code-highlight";
 import ModalWrapper from "./ModalWrapper";
 import Controls from "./Controls";
+import { useSnapshot } from "valtio";
+import { selectTotalRows, selectCode } from "../../store/fields/derived";
+import { fieldsActions } from "../../store/fields/actions";
 
-type Props = {
-  code: string | null;
-  setCode: (code: string | null) => void;
-  totalRows: number;
-  setTotalRows: (rows: number) => void;
-};
+export default function DisplayData() {
+  const { totalRows } = useSnapshot(selectTotalRows);
+  const { code } = useSnapshot(selectCode);
 
-export default function DisplayData({
-  setTotalRows,
-  code,
-  setCode,
-  totalRows,
-}: Props) {
   return (
-    <ModalWrapper code={code} setCode={setCode} totalRows={totalRows}>
-      <Controls
-        code={code}
-        totalRows={totalRows}
-        setTotalRows={setTotalRows}
-      />
+    <ModalWrapper
+      code={code}
+      setCode={fieldsActions.setCode}
+      totalRows={totalRows}
+    >
+      <Controls code={code} />
       <CodeHighlight
         code={code ?? ""}
         language="json"

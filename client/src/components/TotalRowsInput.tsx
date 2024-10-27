@@ -1,12 +1,11 @@
 import { NumberInput } from "@mantine/core";
+import { useSnapshot } from "valtio";
+import { selectTotalRows } from "../store/fields/derived";
+import { fieldsActions } from "../store/fields/actions";
 
-export default function TotalRowsInput({
-  totalRows,
-  setTotalRows,
-}: {
-  totalRows: number;
-  setTotalRows: (rows: number) => void;
-}) {
+export default function TotalRowsInput() {
+  const { totalRows } = useSnapshot(selectTotalRows);
+
   return (
     <NumberInput
       label="Total Rows"
@@ -14,7 +13,7 @@ export default function TotalRowsInput({
       min={0}
       max={100}
       value={totalRows}
-      onChange={(value) => setTotalRows(Number(value))}
+      onChange={(value) => fieldsActions.setTotalRows(Number(value))}
     />
   );
 }

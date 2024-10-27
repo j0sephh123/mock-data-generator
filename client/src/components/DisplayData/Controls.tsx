@@ -6,16 +6,14 @@ import useGenerate from "../../hooks/useGenerate";
 
 type Props = {
   code: string | null;
-  totalRows: number;
-  setTotalRows: (rows: number) => void;
 };
 
-export default function Controls({ code, totalRows, setTotalRows }: Props) {
+export default function Controls({ code }: Props) {
   const handleGenerate = useGenerate();
 
   return (
     <Group justify="space-between">
-      <TotalRowsInput totalRows={totalRows} setTotalRows={setTotalRows} />
+      <TotalRowsInput />
       <Group pb="sm" gap="xs" justify="right">
         <JsonDownloadButton data={code} />
         <Tooltip label="Regenerate Data" withArrow position="bottom">

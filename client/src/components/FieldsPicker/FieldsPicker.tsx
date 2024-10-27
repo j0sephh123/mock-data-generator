@@ -1,44 +1,45 @@
-import { Button } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
 import { Plus } from "lucide-react";
-import { fieldsProxy } from "../../store/store";
-import FieldRow from "../FieldRow/FieldRow";
+import FieldRow from "./FieldRow";
 import { useSnapshot } from "valtio";
-import generateId from "../../utils/generateId";
+import { fieldsActions } from "../../store/fields/actions";
+import { selectFields } from "../../store/fields/derived";
+import { Droppable } from "@hello-pangea/dnd";
 
 const MAX_FIELDS = 10;
 
 export default function FieldsPicker() {
-  const { fields } = useSnapshot(fieldsProxy);
-
-  const handleAddField = () => {
-    const lastField = fields[fields.length - 1];
-    fieldsProxy.fields = [
-      ...fields,
-      {
-        id: generateId(),
-        name: fields.length > 0 ? lastField.name : "first_name",
-        fieldType: fields.length > 0 ? lastField.fieldType : "firstName",
-      },
-    ];
-  };
-
-  const handleRemoveField = (id: string) => {
-    fieldsProxy.fields = fields.filter((field) => field.id !== id);
-  };
+  const { fields } = useSnapshot(selectFields);
 
   return (
     <>
-      {fields.map(({ fieldType, id, name }) => (
-        <FieldRow
-          name={name}
-          type={fieldType}
-          key={id}
-          id={id}
-          onRemove={handleRemoveField}
-        />
-      ))}
+      <Flex>
+        <Text>Field Name</Text>
+        <Text>Field Type</Text>
+      </Flex>
+      <Droppable droppableId="droppable">
+        {({
+          droppableProps,
+          innerRef: droppableInnerRef,
+          placeholder: droppablePlaceholder,
+        }) => (
+          <div {...droppableProps} ref={droppableInnerRef}>
+            {fields.map(({ fieldType, id, name }, index) => (
+              <FieldRow
+                name={name}
+                fieldType={fieldType}
+                key={id}
+                id={id}
+                index={index}
+              />
+            ))}
+            {droppablePlaceholder}
+          </div>
+        )}
+      </Droppable>
+
       {fields.length < MAX_FIELDS && (
-        <Button onClick={handleAddField} color="gray" leftSection={<Plus />}>
+        <Button onClick={fieldsActions.add} color="gray" leftSection={<Plus />}>
           Add Another Field
         </Button>
       )}

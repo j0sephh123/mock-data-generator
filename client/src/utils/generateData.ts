@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { faker } from "@faker-js/faker";
-import { generateDataReqSchema } from "shared";
-import { z } from "zod";
+import { FieldsProxy } from "../store/fields/types";
+import { DeepReadonly } from "../types";
 
 const mapFieldToFaker = {
   fullName: faker.person.fullName,
@@ -9,15 +9,17 @@ const mapFieldToFaker = {
   lastName: faker.person.lastName,
 } as const;
 
-export default async function generateData(
-  params: z.infer<typeof generateDataReqSchema>
-) {
+export default async function generateData({
+  fields,
+  totalRows,
+}: {
+  fields: DeepReadonly<FieldsProxy["fields"]>;
+  totalRows: FieldsProxy["totalRows"];
+}) {
   return new Promise((resolve) => {
-    const { totalRows, fields } = params;
     const generatedData: any[] = [];
 
     console.log(fields);
-    
 
     for (let i = 0; i < totalRows; i++) {
       const data = fields.reduce<Record<string, string>>(

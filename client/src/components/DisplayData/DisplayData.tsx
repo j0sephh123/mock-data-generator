@@ -7,11 +7,9 @@ type Props = {
   setCode: (code: string | null) => void;
   totalRows: number;
   setTotalRows: (rows: number) => void;
-  handlePreviewData: () => void;
 };
 
 export default function DisplayData({
-  handlePreviewData,
   setTotalRows,
   code,
   setCode,
@@ -23,7 +21,6 @@ export default function DisplayData({
         code={code}
         totalRows={totalRows}
         setTotalRows={setTotalRows}
-        handlePreviewData={handlePreviewData}
       />
       <CodeHighlight
         code={code ?? ""}

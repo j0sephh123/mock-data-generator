@@ -3,3 +3,5 @@ export type DeepReadonly<T> = {
     ? DeepReadonly<T[K]>
     : T[K];
 };
+
+export type Debug<T extends string | number | symbol> = { [K in T]: K };

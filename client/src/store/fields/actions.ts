@@ -1,9 +1,10 @@
+import camelToSnakeCase from "../../fakerService/camelToSnake";
 import { FieldTypeI } from "../../schemas";
 import generateId from "../../utils/generateId";
 import { fieldsProxy } from "./store";
-import { FieldRowI, FieldsProxy } from "./types";
+import { FieldI, FieldsProxy } from "./types";
 
-const remove = (id: FieldRowI["id"]) => {
+const remove = (id: FieldI["id"]) => {
   const index = fieldsProxy.fields.findIndex((field) => field.id === id);
   fieldsProxy.fields.splice(index, 1);
 };
@@ -17,18 +18,20 @@ const add = () => {
       fieldsProxy.fields.length > 0 ? lastField.fieldType : "firstName",
   });
 };
-const rename = (id: FieldRowI["id"], newName: string) => {
+const rename = (id: FieldI["id"], newName: string) => {
   const foundElementIndex = fieldsProxy.fields.findIndex(
     (field) => field.id === id
   );
   fieldsProxy.fields[foundElementIndex].name = newName;
 };
 
-const changeFieldType = (id: FieldRowI["id"], newValue: FieldTypeI) => {
+const changeFieldType = (id: FieldI["id"], newValue: FieldTypeI) => {
   const foundElementIndex = fieldsProxy.fields.findIndex(
     (field) => field.id === id
   );
+
   fieldsProxy.fields[foundElementIndex].fieldType = newValue;
+  fieldsProxy.fields[foundElementIndex].name = camelToSnakeCase(newValue);
 };
 
 const setCode = (code: FieldsProxy["code"]) => {

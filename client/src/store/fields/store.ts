@@ -5,7 +5,7 @@ import { FieldsProxy } from "./types";
 
 export const fieldsProxy = proxy<FieldsProxy>({
   fields: defaultFields,
-  totalRows: 10,
+  totalRows: 3,
   code: null,
 });
 

@@ -3,12 +3,6 @@ import { faker } from "@faker-js/faker";
 import { FieldsProxy } from "../store/fields/types";
 import { DeepReadonly } from "../types";
 
-const mapFieldToFaker = {
-  fullName: faker.person.fullName,
-  firstName: faker.person.firstName,
-  lastName: faker.person.lastName,
-} as const;
-
 export default async function generateData({
   fields,
   totalRows,
@@ -24,7 +18,7 @@ export default async function generateData({
     for (let i = 0; i < totalRows; i++) {
       const data = fields.reduce<Record<string, string>>(
         (acc, { fieldType, name }) => {
-          const result = mapFieldToFaker[fieldType]();
+          const result = faker.person[fieldType]();
 
           acc[name] = result;
 

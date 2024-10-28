@@ -11,9 +11,9 @@ export default function DisplayData() {
 
   return (
     <ModalWrapper
-      code={code}
-      setCode={fieldsActions.setCode}
-      totalRows={totalRows}
+      title={`Preview ${totalRows} rows`}
+      onClose={() => fieldsActions.setCode(null)}
+      isOpen={!!code}
     >
       <Controls code={code} />
       <CodeHighlight

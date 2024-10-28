@@ -1,19 +1,14 @@
-import { FieldRowI } from "./types";
+import { FieldI } from "./types";
 
-export const defaultFields: FieldRowI[] = [
+export const defaultFields: FieldI[] = [
   {
     id: "1",
-    name: "first_name",
-    fieldType: "firstName",
-  },
-  {
-    id: "2",
     name: "full_name",
     fieldType: "fullName",
   },
   {
-    id: "3",
-    name: "last_name",
-    fieldType: "lastName",
+    id: "2",
+    name: "gender",
+    fieldType: "gender",
   },
 ];

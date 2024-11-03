@@ -1,5 +1,4 @@
-import { Select, TextInput } from "@mantine/core";
-import { FieldTypeI } from "../../schemas";
+import { Autocomplete, TextInput } from "@mantine/core";
 import { fieldsActions } from "../../store/fields/actions";
 import DraggableWrapper from "./DraggableWrapper";
 import RemoveIcon from "./RemoveIcon";
@@ -7,17 +6,19 @@ import OptionsIcon from "./OptionsIcon";
 import { useState } from "react";
 import ModalWrapper from "../DisplayData/ModalWrapper";
 import personMethods from "../../fakerService/person";
+import { FieldType } from "../../store/fields/types";
+import FullNameOptions from "./options/FullNameOptions";
 
 type Props = {
   id: string;
-  fieldType: FieldTypeI;
+  fieldType: FieldType;
   name: string;
   index: number;
 };
 
 type Options = {
   title: string;
-  fieldType: FieldTypeI;
+  fieldType: FieldType;
 };
 
 export default function FieldRow({ name, fieldType, id, index }: Props) {
@@ -30,7 +31,7 @@ export default function FieldRow({ name, fieldType, id, index }: Props) {
           value={name}
           onChange={(e) => fieldsActions.rename(id, e.currentTarget.value)}
         />
-        <Select
+        <Autocomplete
           value={fieldType}
           onChange={(value) =>
             fieldsActions.changeFieldType(id, value as Props["fieldType"])
@@ -47,7 +48,7 @@ export default function FieldRow({ name, fieldType, id, index }: Props) {
         onClose={() => setOptions(null)}
         isOpen={!!options}
       >
-        {fieldType === "firstName" && "first name"}
+        {fieldType === "fullName" && <FullNameOptions id={id} />}
       </ModalWrapper>
     </>
   );
